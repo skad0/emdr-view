@@ -9,6 +9,8 @@ import { EmdrViewEvent } from "./components/my-component/emdr-view";
 export namespace Components {
     interface EmdrView {
         "audio": string | null;
+        "iconSize": number;
+        "iconSpace": number;
         "iconSrc": string;
         "iconType": 'source' | 'shape';
         "isSameComponent": (componentKey: string) => Promise<boolean>;
@@ -16,6 +18,7 @@ export namespace Components {
         "movementPeriod": number;
         "movementPreset": 'flick' | 'smooth';
         "startMovement": () => Promise<void>;
+        "stickTime": number;
         "stopMovement": () => Promise<void>;
     }
 }
@@ -33,12 +36,16 @@ declare global {
 declare namespace LocalJSX {
     interface EmdrView {
         "audio"?: string | null;
+        "iconSize"?: number;
+        "iconSpace"?: number;
         "iconSrc"?: string;
         "iconType"?: 'source' | 'shape';
         "movementDuration"?: number;
         "movementPeriod"?: number;
         "movementPreset"?: 'flick' | 'smooth';
         "onDurationEnd"?: (event: CustomEvent<EmdrViewEvent>) => void;
+        "onMovementTick"?: (event: CustomEvent<EmdrViewEvent>) => void;
+        "stickTime"?: number;
     }
     interface IntrinsicElements {
         "emdr-view": EmdrView;
