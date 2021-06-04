@@ -14,8 +14,8 @@ export namespace Components {
         "iconSrc": string;
         "iconType": 'source' | 'shape';
         "isSameComponent": (componentKey: string) => Promise<boolean>;
+        "iterationsCount": number;
         "movementDuration": number;
-        "movementPeriod": number;
         "movementPreset": 'flick' | 'smooth';
         "startMovement": () => Promise<void>;
         "stickTime": number;
@@ -40,8 +40,8 @@ declare namespace LocalJSX {
         "iconSpace"?: number;
         "iconSrc"?: string;
         "iconType"?: 'source' | 'shape';
+        "iterationsCount"?: number;
         "movementDuration"?: number;
-        "movementPeriod"?: number;
         "movementPreset"?: 'flick' | 'smooth';
         "onDurationEnd"?: (event: CustomEvent<EmdrViewEvent>) => void;
         "onMovementTick"?: (event: CustomEvent<EmdrViewEvent>) => void;

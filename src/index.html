@@ -9,6 +9,15 @@
     <script nomodule src="/build/emdr-view.js"></script>
   </head>
   <body height='100%'>
-    <emdr-view width='100%' height='100%' movement-duration='30000' movement-period='1700'></emdr-view>
+    <emdr-view width='100%' height='100%' movement-duration='60000' iterations-count='30' stickTime='3000'></emdr-view>
+    <div style='width:100%; height:500px;'> </div>
+    <input type="text" id="numbers" value='30'/>
   </body>
+  <script>
+    document.body.onload = () => {
+      document.getElementById('numbers').addEventListener('input', (e) => {
+        document.querySelector('emdr-view').setAttribute('iterations-count', e.target.value)
+      })
+    }
+  </script>
 </html>

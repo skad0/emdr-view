@@ -7,12 +7,13 @@ export interface PresetOptions {
   movementPeriod: number
   stickTime: number
   iconSize: number
+  iterationsCount: number
   iconSpace: number
 }
 
-export const getPresetByName = (presetName: string, {iconSize, movementPeriod, iconSpace}: PresetOptions): AnimationPreset => {
+export const getPresetByName = (presetName: string, {iconSize, movementPeriod, stickTime, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
   const boxSize = iconSize * 2 + iconSpace
-  return {
+  const r = {
     flick: {
       keyframes: [
         {left: '0', right: 'auto', offset: 0}, {left: 'auto', right: '0', offset: 1}
@@ -20,7 +21,7 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, i
       duration: {
         direction: 'alternate',
         duration: movementPeriod,
-        iterations: Infinity
+        iterations: iterationsCount
       }
     },
     smooth: {
@@ -31,15 +32,18 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, i
       duration: {
         direction: 'alternate',
         duration: movementPeriod,
-        iterations: Infinity
+        iterations: iterationsCount,
+        iterationStart: stickTime
       }
     }
   }[presetName] as AnimationPreset
+  console.log('getPresetByName', r)
+  return r
 }
 
-export const getAnimationPreset = (presetName: string, {movementPeriod, stickTime, iconSize, iconSpace}: PresetOptions): AnimationPreset => {
+export const getAnimationPreset = (presetName: string, {movementPeriod, stickTime, iconSize, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
   try {
-    return getPresetByName(presetName, {iconSize, movementPeriod, stickTime, iconSpace})
+    return getPresetByName(presetName, {iconSize, movementPeriod, stickTime, iconSpace, iterationsCount})
   } catch (e) {
     throw new Error(`Unexisting animation preset name = ${presetName}`)
   }
