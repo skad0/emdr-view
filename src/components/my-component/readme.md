@@ -7,21 +7,25 @@
 
 ## Properties
 
-| Property           | Attribute           | Description | Type                  | Default     |
-| ------------------ | ------------------- | ----------- | --------------------- | ----------- |
-| `audio`            | `audio`             |             | `string`              | `null`      |
-| `iconSrc`          | `icon-src`          |             | `string`              | `undefined` |
-| `iconType`         | `icon-type`         |             | `"shape" \| "source"` | `'shape'`   |
-| `movementDuration` | `movement-duration` |             | `number`              | `60`        |
-| `movementPeriod`   | `movement-period`   |             | `number`              | `1000`      |
-| `movementPreset`   | `movement-preset`   |             | `"flick" \| "smooth"` | `'flick'`   |
+| Property           | Attribute           | Description | Type                  | Default                         |
+| ------------------ | ------------------- | ----------- | --------------------- | ------------------------------- |
+| `audio`            | `audio`             |             | `string`              | `null`                          |
+| `iconSize`         | `icon-size`         |             | `number`              | `32`                            |
+| `iconSpace`        | `icon-space`        |             | `number`              | `4`                             |
+| `iconSrc`          | `icon-src`          |             | `string`              | `undefined`                     |
+| `iconType`         | `icon-type`         |             | `"shape" \| "source"` | `'shape'`                       |
+| `iterationsCount`  | `iterations-count`  |             | `number`              | `12`                            |
+| `movementDuration` | `movement-duration` |             | `number`              | `2*60*100 + 2 * this.stickTime` |
+| `movementPreset`   | `movement-preset`   |             | `"flick" \| "smooth"` | `'smooth'`                      |
+| `stickTime`        | `stick-time`        |             | `number`              | `1000`                          |
 
 
 ## Events
 
-| Event         | Description | Type                         |
-| ------------- | ----------- | ---------------------------- |
-| `durationEnd` |             | `CustomEvent<EmdrViewEvent>` |
+| Event          | Description | Type                         |
+| -------------- | ----------- | ---------------------------- |
+| `durationEnd`  |             | `CustomEvent<EmdrViewEvent>` |
+| `movementTick` |             | `CustomEvent<EmdrViewEvent>` |
 
 
 ## Methods
