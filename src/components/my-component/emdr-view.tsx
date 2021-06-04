@@ -1,4 +1,4 @@
-import { Component, Prop, h, Listen, Method, EventEmitter, Event, Watch, State } from '@stencil/core';
+import { Component, Prop, h, Listen, Method, EventEmitter, Event, Watch } from '@stencil/core';
 import { nanoid } from 'nanoid'
 
 import { AnimationPreset, getAnimationPreset } from './animationPresets'
