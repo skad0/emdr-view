@@ -16,12 +16,14 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, s
   const r = {
     flick: {
       keyframes: [
-        {left: '0', right: 'auto', offset: 0}, {left: 'auto', right: '0', offset: 1}
+        {left: '0', right: 'auto', offset: 0}, {left: `calc(100% - ${boxSize}px)`, right: '0', offset: 1}
       ],
       duration: {
         direction: 'alternate',
         duration: movementPeriod,
-        iterations: iterationsCount
+        iterations: iterationsCount,
+        //fill: 'forwards',
+        easing: `steps(1)`
       }
     },
     smooth: {
@@ -33,11 +35,12 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, s
         direction: 'alternate',
         duration: movementPeriod,
         iterations: iterationsCount,
-        iterationStart: stickTime
+        fill: 'forwards',
+        composite: 'add'
       }
     }
   }[presetName] as AnimationPreset
-  console.log('getPresetByName', r)
+  console.log('getPresetByName', r, presetName)
   return r
 }
 

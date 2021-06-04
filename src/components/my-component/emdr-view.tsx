@@ -27,9 +27,8 @@ export class EmdrView {
   stickEndTimer: number
   // iteration duration + stick time
   movementPeriod: number // ms
-  // iteration duration without stick time
-  pureMovementPeriod: number // ms
   isMovementInProgress = false
+  iterationsCounter = 0
 
   @Prop() iconType: 'source' | 'shape' = 'shape'
   @Prop() iconSize: number = 32
@@ -66,9 +65,6 @@ export class EmdrView {
         iconSpace: this.iconSpace
       })
     }
-    if (!this.animatable) {
-      this.initAnimation()
-    }
   }
 
   calculateMovementPeriod() {
@@ -78,21 +74,27 @@ export class EmdrView {
 
   initAnimation() {
     const { animationPreset: { keyframes, duration }, ref } = this
-
     this.animatable = ref.animate(keyframes, duration)
-    this.animatable.pause()
   }
 
   @Event() movementTick: EventEmitter<EmdrViewEvent>
-  onMovementTickHandler() {
+  async onMovementTickHandler() {
     if (!this.isMovementInProgress) {
       return
     }
-    console.log('onMovementTickHandler')
     this.animatable.pause()
-    this.stickEndTimer = setTimeout(() => {
-      this.nextTickTimer = setTimeout(() => this.onMovementTickHandler(), this.movementPeriod)
+    await this.animatable.ready
+    this.iterationsCounter++
+    this.stickEndTimer = setTimeout(async () => {
+      if (!this.isMovementInProgress) {
+        return
+      }
+      const { progress } = this.animatable.effect.getComputedTiming()
+      const multiplier = this.iterationsCounter % 2 === 0 ? 1 - progress : progress
+      const calculatedPeriod = this.movementPeriod - (this.movementPeriod * multiplier)
       this.animatable.play()
+      await this.animatable.ready
+      this.nextTickTimer = setTimeout(() => this.onMovementTickHandler(), calculatedPeriod)
     }, this.stickTime)
     if (this.audio) {
       // play sound
@@ -128,27 +130,27 @@ export class EmdrView {
 
   @Method()
   async startMovement(): Promise<void> {
-    console.log('startMovement')
+    if (!this.animatable) {
+      this.initAnimation()
+    }
+    await this.animatable.ready
     this.isMovementInProgress = true
-    this.animatable.play()
-
+    const {activeDuration, progress} = this.animatable.effect.getComputedTiming()
+    const duration = activeDuration - progress * activeDuration
     this.durationTimer = setTimeout(async () => {
       await this.stopMovement()
-    }, this.movementDuration + 2 * this.stickTime)
-    const firstStick = setTimeout(() => {
-      window.clearTimeout(firstStick)
-      this.onMovementTickHandler()
-    }, this.movementPeriod)
+    }, duration + 2 * this.stickTime)
+
+    await this.onMovementTickHandler()
   }
 
   @Method()
   async stopMovement(): Promise<void> {
-    console.log('stopMovement')
+    this.isMovementInProgress = false
     window.clearTimeout(this.durationTimer)
     window.clearTimeout(this.nextTickTimer)
     window.clearTimeout(this.stickEndTimer)
-    this.isMovementInProgress = false
-    this.animatable.cancel()
+    this.animatable?.cancel()
   }
 
   @Method()
