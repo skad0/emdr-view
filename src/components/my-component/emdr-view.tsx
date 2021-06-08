@@ -45,6 +45,11 @@ export class EmdrView {
     this.calculateMovementPeriod()
   }
 
+  @Watch('movementPreset') @Watch('movementPeriod') @Watch('iterationsCount') @Watch('iconSize') @Watch('iconSpace')
+  setMovementPreset() {
+    this.resetAnimationPreset()
+  }
+
   connectedCallback() {
     if (!this.componentKey) {
       // TODO: not secure, provide with dictionary
@@ -68,6 +73,10 @@ export class EmdrView {
 
   calculateMovementPeriod() {
     this.movementPeriod = this.movementDuration / this.iterationsCount
+  }
+
+  resetAnimationPreset() {
+    this.animationPreset = null
   }
 
   initAnimation() {
