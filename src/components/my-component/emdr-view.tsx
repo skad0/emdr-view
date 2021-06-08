@@ -58,7 +58,6 @@ export class EmdrView {
   componentDidRender() {
     if (!this.animationPreset) {
       this.animationPreset = getAnimationPreset(this.movementPreset, {
-        stickTime: this.stickTime,
         movementPeriod: this.movementPeriod,
         iterationsCount: this.iterationsCount,
         iconSize: this.iconSize,
@@ -69,7 +68,6 @@ export class EmdrView {
 
   calculateMovementPeriod() {
     this.movementPeriod = this.movementDuration / this.iterationsCount
-    console.log('calculateMovementPeriod', this.movementPeriod, this.movementDuration, this.iterationsCount, this.stickTime)
   }
 
   initAnimation() {
@@ -82,6 +80,7 @@ export class EmdrView {
     if (!this.isMovementInProgress) {
       return
     }
+
     this.animatable.pause()
     await this.animatable.ready
     this.iterationsCounter++

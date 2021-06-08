@@ -5,25 +5,25 @@ export interface AnimationPreset {
 
 export interface PresetOptions {
   movementPeriod: number
-  stickTime: number
   iconSize: number
   iterationsCount: number
   iconSpace: number
 }
 
-export const getPresetByName = (presetName: string, {iconSize, movementPeriod, stickTime, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
+export const getPresetByName = (presetName: string, {iconSize, movementPeriod, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
   const boxSize = iconSize * 2 + iconSpace
-  const r = {
+  return {
     flick: {
       keyframes: [
-        {left: '0', right: 'auto', offset: 0}, {left: `calc(100% - ${boxSize}px)`, right: '0', offset: 1}
+        {left: '0', offset: 0.0}, // 0%
+        {left: '0', offset: 0.5}, // 50%
+        {left: `calc(100% - ${boxSize}px)`, offset: 0.50001}, // 50.001%
+        {left: `calc(100% - ${boxSize}px)`, offset: 1} // 100%
       ],
       duration: {
         direction: 'alternate',
         duration: movementPeriod,
-        iterations: iterationsCount,
-        //fill: 'forwards',
-        easing: `steps(1)`
+        iterations: iterationsCount
       }
     },
     smooth: {
@@ -40,13 +40,11 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, s
       }
     }
   }[presetName] as AnimationPreset
-  console.log('getPresetByName', r, presetName)
-  return r
 }
 
-export const getAnimationPreset = (presetName: string, {movementPeriod, stickTime, iconSize, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
+export const getAnimationPreset = (presetName: string, {movementPeriod, iconSize, iconSpace, iterationsCount}: PresetOptions): AnimationPreset => {
   try {
-    return getPresetByName(presetName, {iconSize, movementPeriod, stickTime, iconSpace, iterationsCount})
+    return getPresetByName(presetName, {iconSize, movementPeriod, iconSpace, iterationsCount})
   } catch (e) {
     throw new Error(`Unexisting animation preset name = ${presetName}`)
   }
