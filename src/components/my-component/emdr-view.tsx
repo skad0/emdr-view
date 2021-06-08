@@ -45,7 +45,7 @@ export class EmdrView {
     this.calculateMovementPeriod()
   }
 
-  @Watch('movementPreset') @Watch('movementPeriod') @Watch('iterationsCount') @Watch('iconSize') @Watch('iconSpace')
+  @Watch('movementPreset') @Watch('movementDuration') @Watch('iterationsCount') @Watch('iconSize') @Watch('iconSpace')
   setMovementPreset() {
     this.resetAnimationPreset()
   }
