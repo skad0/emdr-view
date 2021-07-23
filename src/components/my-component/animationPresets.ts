@@ -28,8 +28,10 @@ export const getPresetByName = (presetName: string, {iconSize, movementPeriod, i
     },
     smooth: {
       keyframes: [
-        {left: '0', right: 'auto'},
-        {left: `calc(100% - ${boxSize}px)`, right: 'auto'}
+        {left: '0', right: 'auto', offset: 0.0},
+        {left: '0', right: 'auto', offset: 0.00003},
+        {left: `calc(100% - ${boxSize}px)`, right: 'auto', offset: 0.99997},
+        {left: `calc(100% - ${boxSize}px)`, right: 'auto', offset: 1}
       ],
       duration: {
         direction: 'alternate',

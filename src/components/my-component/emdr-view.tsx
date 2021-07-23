@@ -1,6 +1,7 @@
 import { Component, Prop, h, Listen, Method, EventEmitter, Event, Watch } from '@stencil/core';
 import { nanoid } from 'nanoid'
 
+import { Interval } from '../../utils/utils'
 import { AnimationPreset, getAnimationPreset } from './animationPresets'
 
 export interface EmdrViewEvent {
@@ -22,32 +23,48 @@ export class EmdrView {
   animatable: Animation
   durationTimer: number
   // timer to next tick
-  nextTickTimer: number
-  // timer for stick after iteration end
-  stickEndTimer: number
+  nextTickTimer: Interval
   // iteration duration + stick time
   movementPeriod: number // ms
   isMovementInProgress = false
-  iterationsCounter = 0
 
   @Prop() iconType: 'source' | 'shape' = 'shape'
   @Prop() iconSize: number = 32
   @Prop() iconSrc: string
   @Prop() iconSpace: number = 4
   @Prop() movementPreset: 'flick' | 'smooth' = 'smooth'
-  @Prop() stickTime: number = 1000 // ms
   @Prop() audio: string | null = null
-  @Prop() movementDuration: number = 2*60*100 + 2 * this.stickTime // ms
+  @Prop() movementDuration: number
   @Prop() iterationsCount: number = 12
+  @Prop({mutable: true}) isActive: boolean = false
 
-  @Watch('iterationsCount')
-  setIterationsCount() {
-    this.calculateMovementPeriod()
+  @Watch('isActive')
+  async setIsActive(newValue) {
+    if (newValue === true && this.isMovementInProgress === false) {
+      await this.startMovement()
+      return
+    }
+    if (newValue === false && this.isMovementInProgress === true) {
+      await this.stopMovement()
+      return
+    }
   }
 
-  @Watch('movementPreset') @Watch('movementDuration') @Watch('iterationsCount') @Watch('iconSize') @Watch('iconSpace')
+  @Watch('iterationsCount') @Watch('movementDuration')
+  setIterationsCount() {
+    this.calculateMovementPeriod()
+    this.setTickTimer()
+  }
+
+  @Watch('movementPreset') @Watch('movementDuration') @Watch('iterationsCount') @Watch('iconSize') @Watch('iconSpace') @Watch('isActive')
   setMovementPreset() {
     this.resetAnimationPreset()
+  }
+
+  setTickTimer() {
+    this.nextTickTimer = Interval(async () => {
+      await this.onMovementTickHandler()
+    }, this.movementPeriod)
   }
 
   connectedCallback() {
@@ -58,9 +75,10 @@ export class EmdrView {
     if (!this.movementPeriod) {
       this.calculateMovementPeriod()
     }
+    this.setTickTimer()
   }
 
-  componentDidRender() {
+  async componentDidRender() {
     if (!this.animationPreset) {
       this.animationPreset = getAnimationPreset(this.movementPreset, {
         movementPeriod: this.movementPeriod,
@@ -81,29 +99,14 @@ export class EmdrView {
 
   initAnimation() {
     const { animationPreset: { keyframes, duration }, ref } = this
+    console.log('animationPreset', this.animationPreset)
     this.animatable = ref.animate(keyframes, duration)
   }
 
   @Event() movementTick: EventEmitter<EmdrViewEvent>
   async onMovementTickHandler() {
-    if (!this.isMovementInProgress) {
-      return
-    }
-
-    this.animatable.pause()
+    this.animatable.play()
     await this.animatable.ready
-    this.iterationsCounter++
-    this.stickEndTimer = setTimeout(async () => {
-      if (!this.isMovementInProgress) {
-        return
-      }
-      const { progress } = this.animatable.effect.getComputedTiming()
-      const multiplier = this.iterationsCounter % 2 === 0 ? 1 - progress : progress
-      const calculatedPeriod = this.movementPeriod - (this.movementPeriod * multiplier)
-      this.animatable.play()
-      await this.animatable.ready
-      this.nextTickTimer = setTimeout(() => this.onMovementTickHandler(), calculatedPeriod)
-    }, this.stickTime)
     if (this.audio) {
       // play sound
       console.log('play sound')
@@ -143,21 +146,22 @@ export class EmdrView {
     }
     await this.animatable.ready
     this.isMovementInProgress = true
+    if (!this.isActive) this.isActive = true
     const {activeDuration, progress} = this.animatable.effect.getComputedTiming()
     const duration = activeDuration - progress * activeDuration
     this.durationTimer = setTimeout(async () => {
       await this.stopMovement()
-    }, duration + 2 * this.stickTime)
-
-    await this.onMovementTickHandler()
+      this.onDurationEndHandler()
+    }, duration)
+    this.nextTickTimer.run()
   }
 
   @Method()
   async stopMovement(): Promise<void> {
+    this.nextTickTimer.stop()
     this.isMovementInProgress = false
+    if (this.isActive === true) this.isActive = false
     window.clearTimeout(this.durationTimer)
-    window.clearTimeout(this.nextTickTimer)
-    window.clearTimeout(this.stickEndTimer)
     this.animatable?.cancel()
   }
 

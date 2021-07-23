@@ -9,6 +9,8 @@ export const config: Config = {
     },
     {
       type: 'dist-custom-elements-bundle',
+      inlineDynamicImports: true,
+      externalRuntime: false
     },
     {
       type: 'docs-readme',

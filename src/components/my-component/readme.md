@@ -7,17 +7,17 @@
 
 ## Properties
 
-| Property           | Attribute           | Description | Type                  | Default                         |
-| ------------------ | ------------------- | ----------- | --------------------- | ------------------------------- |
-| `audio`            | `audio`             |             | `string`              | `null`                          |
-| `iconSize`         | `icon-size`         |             | `number`              | `32`                            |
-| `iconSpace`        | `icon-space`        |             | `number`              | `4`                             |
-| `iconSrc`          | `icon-src`          |             | `string`              | `undefined`                     |
-| `iconType`         | `icon-type`         |             | `"shape" \| "source"` | `'shape'`                       |
-| `iterationsCount`  | `iterations-count`  |             | `number`              | `12`                            |
-| `movementDuration` | `movement-duration` |             | `number`              | `2*60*100 + 2 * this.stickTime` |
-| `movementPreset`   | `movement-preset`   |             | `"flick" \| "smooth"` | `'smooth'`                      |
-| `stickTime`        | `stick-time`        |             | `number`              | `1000`                          |
+| Property           | Attribute           | Description | Type                  | Default     |
+| ------------------ | ------------------- | ----------- | --------------------- | ----------- |
+| `audio`            | `audio`             |             | `string`              | `null`      |
+| `iconSize`         | `icon-size`         |             | `number`              | `32`        |
+| `iconSpace`        | `icon-space`        |             | `number`              | `4`         |
+| `iconSrc`          | `icon-src`          |             | `string`              | `undefined` |
+| `iconType`         | `icon-type`         |             | `"shape" \| "source"` | `'shape'`   |
+| `isActive`         | `is-active`         |             | `boolean`             | `false`     |
+| `iterationsCount`  | `iterations-count`  |             | `number`              | `12`        |
+| `movementDuration` | `movement-duration` |             | `number`              | `undefined` |
+| `movementPreset`   | `movement-preset`   |             | `"flick" \| "smooth"` | `'smooth'`  |
 
 
 ## Events
