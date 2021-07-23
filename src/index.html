@@ -34,12 +34,20 @@
         },
         'movement-preset': {
           default: 'smooth'
+        },
+        'is-active': {
+          default: false,
+          input: 'checkbox'
         }
       }
       const controlsContainer = document.getElementById('props-controls')
       let elements = ''
 
       Object.keys(controls).forEach(attributeName => {
+        if (controls[attributeName].input === 'checkbox') {
+          elements += `\n<p><label for='${attributeName}'>${attributeName}: </label><input type="checkbox" id='${attributeName}'${controls[attributeName].default ? ' checked ' : ' '}/></p>`
+          return
+        }
         elements += `\n<p><label for='${attributeName}'>${attributeName}: </label><input type="text" id='${attributeName}' placeholder='${attributeName}' value='${controls[attributeName].default}' /></p>`
       })
 
