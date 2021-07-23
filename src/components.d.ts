@@ -13,12 +13,12 @@ export namespace Components {
         "iconSpace": number;
         "iconSrc": string;
         "iconType": 'source' | 'shape';
+        "isActive": boolean;
         "isSameComponent": (componentKey: string) => Promise<boolean>;
         "iterationsCount": number;
         "movementDuration": number;
         "movementPreset": 'flick' | 'smooth';
         "startMovement": () => Promise<void>;
-        "stickTime": number;
         "stopMovement": () => Promise<void>;
     }
 }
@@ -40,12 +40,12 @@ declare namespace LocalJSX {
         "iconSpace"?: number;
         "iconSrc"?: string;
         "iconType"?: 'source' | 'shape';
+        "isActive"?: boolean;
         "iterationsCount"?: number;
         "movementDuration"?: number;
         "movementPreset"?: 'flick' | 'smooth';
         "onDurationEnd"?: (event: CustomEvent<EmdrViewEvent>) => void;
         "onMovementTick"?: (event: CustomEvent<EmdrViewEvent>) => void;
-        "stickTime"?: number;
     }
     interface IntrinsicElements {
         "emdr-view": EmdrView;
